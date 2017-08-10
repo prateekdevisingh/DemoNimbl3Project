@@ -4,13 +4,20 @@ package adapters;
  * Created by Prateek on 09/08/17.
  */
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import android.graphics.Color;
@@ -19,12 +26,23 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.example.prateek.demonimbl3project.R;
+
 import java.util.Random;
+
+import models.SurvayModel;
+import utility.Utility;
+import utility.VolleyRequestSingleton;
 
 public class MainPagerAdapter extends PagerAdapter {
 
     private final Random random = new Random();
     private int mSize;
+    private ArrayList<SurvayModel> modelArrayList;
+    Context context;
 
     public MainPagerAdapter() {
         mSize = 5;
@@ -34,8 +52,13 @@ public class MainPagerAdapter extends PagerAdapter {
         mSize = count;
     }
 
+    public MainPagerAdapter(Context context, ArrayList<SurvayModel> modelArrayList) {
+        this.modelArrayList = modelArrayList;
+        this.context = context;
+    }
+
     @Override public int getCount() {
-        return mSize;
+        return modelArrayList.size();
     }
 
     @Override public boolean isViewFromObject(View view, Object object) {
@@ -47,15 +70,30 @@ public class MainPagerAdapter extends PagerAdapter {
     }
 
     @Override public Object instantiateItem(ViewGroup view, int position) {
-        TextView textView = new TextView(view.getContext());
-        textView.setText(String.valueOf(position + 1));
-        textView.setBackgroundColor(0xff000000 | random.nextInt(0x00ffffff));
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(Color.WHITE);
-        textView.setTextSize(48);
-        view.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        return textView;
+
+
+
+            LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View customView = layoutInflater.inflate(R.layout.adapter_main_pager_layout, view, false);
+            ImageLoader imageLoader = VolleyRequestSingleton.getInstance(context).getImageLoader();
+
+            SurvayModel survayModel = (SurvayModel) this.modelArrayList.get(position);
+            String urlSurvay = survayModel.getCover_image_url();
+            NetworkImageView networkImageView = (NetworkImageView) customView.findViewById(R.id.nivSurvay);
+            Button btSurvay = (Button) customView.findViewById(R.id.btSurvay);
+
+
+            btSurvay.setText(String.valueOf(position));
+            imageLoader.get(urlSurvay, ImageLoader.getImageListener(networkImageView, 0, 0));
+            networkImageView.setImageUrl(urlSurvay, imageLoader);
+            networkImageView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_orange_light));
+
+
+            ((ViewPager)view).addView(customView);
+
+            return customView;
+
+
     }
 
     public void addItem() {

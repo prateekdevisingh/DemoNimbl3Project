@@ -38,11 +38,15 @@ import android.widget.LinearLayout;
 
 import com.example.prateek.demonimbl3project.R;
 
+import java.util.ArrayList;
+
+import models.SurvayModel;
+
 import static android.support.v4.view.ViewPager.OnPageChangeListener;
 
 public class CircularIndicator extends LinearLayout {
 
-    private final static int DEFAULT_INDICATOR_WIDTH = 5;
+    private static int DEFAULT_INDICATOR_WIDTH = 5;
     private ViewPager mViewpager;
     private int mIndicatorMargin = -1;
     private int mIndicatorWidth = -1;
@@ -55,7 +59,8 @@ public class CircularIndicator extends LinearLayout {
     private Animator mAnimatorIn;
     private Animator mImmediateAnimatorOut;
     private Animator mImmediateAnimatorIn;
-
+    private Context context;
+    private ArrayList<SurvayModel> modelArrayList;
     private int mLastPosition = -1;
 
     public CircularIndicator(Context context) {
@@ -194,6 +199,11 @@ public class CircularIndicator extends LinearLayout {
         }
     }
 
+
+    public void setArrayList(ArrayList<SurvayModel> modelArrayList){
+        this.modelArrayList = modelArrayList;
+        DEFAULT_INDICATOR_WIDTH = modelArrayList.size();
+    }
     private final ViewPager.OnPageChangeListener mInternalPageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override
@@ -301,7 +311,9 @@ public class CircularIndicator extends LinearLayout {
 
         View Indicator = new View(getContext());
         Indicator.setBackgroundResource(backgroundDrawableId);
-        addView(Indicator, mIndicatorWidth, mIndicatorHeight);
+//        addView(Indicator, mIndicatorWidth, mIndicatorHeight);
+
+        addView(Indicator, 50, 20);
         LayoutParams lp = (LayoutParams) Indicator.getLayoutParams();
 
 /*
