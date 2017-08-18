@@ -15,6 +15,7 @@ import android.support.annotation.AnimatorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -47,6 +48,7 @@ import static android.support.v4.view.ViewPager.OnPageChangeListener;
 public class CircularIndicator extends LinearLayout {
 
     private static int DEFAULT_INDICATOR_WIDTH = 5;
+    private static int DEFAULT_INDICATOR_MARGIN = 10;
     private ViewPager mViewpager;
     private int mIndicatorMargin = -1;
     private int mIndicatorWidth = -1;
@@ -154,6 +156,7 @@ public class CircularIndicator extends LinearLayout {
         mIndicatorHeight =
                 (mIndicatorHeight < 0) ? dip2px(DEFAULT_INDICATOR_WIDTH) : mIndicatorHeight;
         mIndicatorMargin =
+//                (mIndicatorMargin < 0) ? dip2px(DEFAULT_INDICATOR_WIDTH) : mIndicatorMargin;
                 (mIndicatorMargin < 0) ? dip2px(DEFAULT_INDICATOR_WIDTH) : mIndicatorMargin;
 
         mAnimatorResId = (mAnimatorResId == 0) ? R.animator.scale_with_alpha : mAnimatorResId;
@@ -286,6 +289,7 @@ public class CircularIndicator extends LinearLayout {
     private void createIndicators() {
         removeAllViews();
         int count = mViewpager.getAdapter().getCount();
+        Log.e("count", String.valueOf(count));
         if (count <= 0) {
             return;
         }
@@ -313,7 +317,7 @@ public class CircularIndicator extends LinearLayout {
         Indicator.setBackgroundResource(backgroundDrawableId);
 //        addView(Indicator, mIndicatorWidth, mIndicatorHeight);
 
-        addView(Indicator, 50, 20);
+        addView(Indicator, mIndicatorWidth, mIndicatorHeight);
         LayoutParams lp = (LayoutParams) Indicator.getLayoutParams();
 
 /*
@@ -330,6 +334,7 @@ public class CircularIndicator extends LinearLayout {
         if (orientation == VERTICAL) {
             lp.leftMargin = mIndicatorMargin;
             lp.rightMargin = mIndicatorMargin;
+            lp.bottomMargin = 50;
         } else {
             lp.topMargin = mIndicatorMargin;
             lp.bottomMargin = mIndicatorMargin;

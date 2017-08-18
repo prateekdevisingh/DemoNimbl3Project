@@ -45,7 +45,7 @@ public class MainPagerAdapter extends PagerAdapter {
     Context context;
 
     public MainPagerAdapter() {
-        mSize = 5;
+        mSize = 4;
     }
 
     public MainPagerAdapter(int count) {
@@ -83,7 +83,7 @@ public class MainPagerAdapter extends PagerAdapter {
             Button btSurvay = (Button) customView.findViewById(R.id.btSurvay);
 
 
-            btSurvay.setText(String.valueOf(position));
+//            btSurvay.setText(String.valueOf(position));
             imageLoader.get(urlSurvay, ImageLoader.getImageListener(networkImageView, 0, 0));
             networkImageView.setImageUrl(urlSurvay, imageLoader);
             networkImageView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_orange_light));

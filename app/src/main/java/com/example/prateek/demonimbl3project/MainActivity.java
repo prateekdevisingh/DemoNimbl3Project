@@ -64,22 +64,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);/*
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
             }
         });
-
-        findViewById(R.id.ivRefreash).setOnClickListener(this);
+*/
+//        findViewById(R.id.ivRefreash).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.ivRefreash:
-                break;
+          /*  case R.id.ivRefreash:
+                break;*/
         }
     }
 
