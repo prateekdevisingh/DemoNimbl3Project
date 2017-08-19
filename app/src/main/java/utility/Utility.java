@@ -11,6 +11,10 @@ import com.example.prateek.demonimbl3project.R;
  * Created by Prateek on 10/08/17.
  */
 
+
+/*
+ This is Utility class
+ */
 public class Utility {
 
     public static void loadNetworkImageView(Context context, String url, final NetworkImageView networkImageView, int width, int height) {
@@ -39,6 +43,15 @@ public class Utility {
 
     }
 
+
+    /**
+     * This function is used to get url with width and height if gif or image present
+     * @param context
+     * @param url
+     * @param width
+     * @param height
+     * @return
+     */
     public static String getURLWithWidthAndHeight(Context context, String url, int width, int height) {
         if(url.endsWith(".gif")){
             return url;
@@ -62,6 +75,14 @@ public class Utility {
     }
 
 
+    /**
+     * This function is used to get url with width and height for ktkat version os of android
+     * @param context
+     * @param url
+     * @param width
+     * @param height
+     * @return
+     */
     public static String getURLWithWidthAndHeightForKitKat(Context context, String url, int width, int height) {
 
         if (width == Constant.ZERO || height == Constant.ZERO) {

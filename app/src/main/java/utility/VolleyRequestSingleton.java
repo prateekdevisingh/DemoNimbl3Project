@@ -10,6 +10,10 @@ import com.android.volley.toolbox.Volley;
 /**
  * Created by Prateek on 10-08-2017.
  */
+
+/**
+ * This is volley request singleton class
+ */
 public class VolleyRequestSingleton {
     private static VolleyRequestSingleton mInstance;
     private RequestQueue mRequestQueue;

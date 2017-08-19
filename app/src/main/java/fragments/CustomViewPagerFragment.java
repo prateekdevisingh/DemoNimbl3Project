@@ -3,6 +3,7 @@ package fragments;
 /**
  * Created by Prateek on 09/08/17.
  */
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.os.Bundle;
@@ -11,10 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-
-import com.example.prateek.demonimbl3project.MainActivity;
 import com.example.prateek.demonimbl3project.R;
 
 import org.json.JSONArray;
@@ -23,23 +20,48 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import adapters.MainPagerAdapter;
-import controller.GETSeverAsync;
 import custom_pager_view.CircularIndicator;
 import custom_pager_view.CustomViewPager;
 import models.SurvayModel;
-import utility.Constant;
 
-
+/**
+ * This class is used to create all views and data manipulation on fragment
+ */
 public class CustomViewPagerFragment extends Fragment {
     private ArrayList<SurvayModel> modelArrayList = new ArrayList<>();
     CustomViewPager customViewPager;
     CircularIndicator circularIndicator;
-    ProgressBar progressBar;
     String result;
 
+    /**
+     * This CustomViewPagerFragment newInstance is used to get data from activity
+     * and then put data in bundle for further uses
+     * @param context
+     * @param result
+     * @return
+     */
+    public static CustomViewPagerFragment newInstance(Context context, String result){
+        CustomViewPagerFragment customViewPagerFragment = new CustomViewPagerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("SURVAY_DATA", result);
+        customViewPagerFragment.setArguments(bundle);
+        return customViewPagerFragment;
+    }
+
+    /**
+     * This function is used to create all views
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        /**
+         * Here, bundle data is check and getting result for further purpose in fragment
+         */
         try {
             if(getArguments().getString("SURVAY_DATA") != null){
                 result = getArguments().getString("SURVAY_DATA");
@@ -56,6 +78,10 @@ public class CustomViewPagerFragment extends Fragment {
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         customViewPager = (CustomViewPager) view.findViewById(R.id.viewpager);
         circularIndicator = (CircularIndicator) view.findViewById(R.id.indicator);
+
+        /**
+         * This function is used to parse result data
+         */
         resultParsing(result);
 
     }
@@ -65,6 +91,7 @@ public class CustomViewPagerFragment extends Fragment {
             try {
                 JSONArray jsonArray = new JSONArray(result);
 
+
             for (int index = 0 ; index < jsonArray.length() ; index++){
                 try{
                     JSONObject jsonObject = jsonArray.getJSONObject(index);
@@ -73,12 +100,12 @@ public class CustomViewPagerFragment extends Fragment {
                      }catch (Exception e){
                     e.printStackTrace();
                 }
-
-
                 customViewPager.setAdapter(new MainPagerAdapter(getContext(), modelArrayList));
                 circularIndicator.setViewPager(customViewPager);
 
             }
+
+
                 circularIndicator.setArrayList(modelArrayList);
             }catch (Exception e){
                e.printStackTrace();
@@ -86,6 +113,12 @@ public class CustomViewPagerFragment extends Fragment {
 
     }
 
+
+    /**
+     * This function is used to parse json survay data from jsonobject in SurvayModel class
+     * and add to modelArrayList
+     * @param jsonObject
+     */
     private void parseJsonSurvay(JSONObject jsonObject) {
         try{
             modelArrayList.add(new SurvayModel(jsonObject.optString("access_code_prompt"),

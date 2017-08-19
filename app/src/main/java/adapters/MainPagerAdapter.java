@@ -5,6 +5,7 @@ package adapters;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.prateek.demonimbl3project.R;
+import com.example.prateek.demonimbl3project.SurvayPageActivity;
 
 import java.util.Random;
 
@@ -37,7 +39,7 @@ import models.SurvayModel;
 import utility.Utility;
 import utility.VolleyRequestSingleton;
 
-public class MainPagerAdapter extends PagerAdapter {
+public class MainPagerAdapter extends PagerAdapter implements View.OnClickListener{
 
     private final Random random = new Random();
     private int mSize;
@@ -82,8 +84,10 @@ public class MainPagerAdapter extends PagerAdapter {
             NetworkImageView networkImageView = (NetworkImageView) customView.findViewById(R.id.nivSurvay);
             Button btSurvay = (Button) customView.findViewById(R.id.btSurvay);
 
+            btSurvay.setTag(position);
 
-//            btSurvay.setText(String.valueOf(position));
+
+            btSurvay.setOnClickListener(this);
             imageLoader.get(urlSurvay, ImageLoader.getImageListener(networkImageView, 0, 0));
             networkImageView.setImageUrl(urlSurvay, imageLoader);
             networkImageView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_orange_light));
@@ -106,5 +110,19 @@ public class MainPagerAdapter extends PagerAdapter {
         mSize = mSize < 0 ? 0 : mSize;
 
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btSurvay:
+                Intent intent = new Intent(this.context, SurvayPageActivity.class);
+                intent.putExtra("SURVAY_DESCRIPTION", ((SurvayModel)this.modelArrayList.get((Integer) view.getTag())).getDescription());
+                intent.putExtra("SURVAY_TITLE", ((SurvayModel)this.modelArrayList.get((Integer) view.getTag())).getTitle());
+                intent.putExtra("SURVAY_IMAGE_URL", ((SurvayModel)this.modelArrayList.get((Integer) view.getTag())).getCover_image_url());
+                context.startActivity(intent);
+                break;
+        }
+
     }
 }

@@ -3,9 +3,13 @@ package models;
 import java.io.Serializable;
 
 /**
- * Created by Ashwin on 10/08/17.
+ * Created by Prateek on 10/08/17.
  */
 
+
+/**
+ * This is model class which provide serialization in objects and act as POJO class
+ */
 public class SurvayModel implements Serializable {
     String access_code_prompt;
     String access_code_validation;

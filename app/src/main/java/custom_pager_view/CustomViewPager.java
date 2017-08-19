@@ -227,7 +227,9 @@ public class CustomViewPager extends ViewPager {
         }
     };
 
-
+    /**
+     * This class is used to make vertical pager for each page
+     */
     private class VerticalPageTransformer implements PageTransformer {
         @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
         @Override

@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import utility.Constant;
 
 /**
- * Created by Mangal on 09/08/2017.
+ * Created by Prateek on 09/08/2017.
  * This Async class is used for GET server request
  */
 public class GETSeverAsync extends AsyncTask<String, Void, String> {

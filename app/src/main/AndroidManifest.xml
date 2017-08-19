@@ -18,7 +18,7 @@ package="com.example.prateek.demonimbl3project">
         </intent-filter>
     </activity>
 
-
+<activity android:name=".SurvayPageActivity"></activity>
 </application>
 
 </manifest>
