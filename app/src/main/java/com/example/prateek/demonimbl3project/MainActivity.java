@@ -2,40 +2,25 @@ package com.example.prateek.demonimbl3project;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
+import android.widget.Button;
+import android.widget.ProgressBar;
 import java.util.ArrayList;
-import java.util.List;
-
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import java.util.ArrayList;
-import java.util.List;
-
+import controller.GETSeverAsync;
 import fragments.CustomViewPagerFragment;
+import models.SurvayModel;
+import utility.Constant;
+import utility.Prefs;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, GETSeverAsync.OnFinishGETAsync {
+    private ArrayList<SurvayModel> modelArrayList = new ArrayList<>();
+    Button btMain;
+    ProgressBar progressBar;
+    String data = "";
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,131 +29,71 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         initToolbar();
+        initilizeGetAPI();
+        initilizeView();
 
-        Fragment demoFragment = Fragment.instantiate(this, SampleListFragment.class.getName());
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, demoFragment);
-        fragmentTransaction.commit();
+    }
 
-        getSupportFragmentManager().addOnBackStackChangedListener(
-                new FragmentManager.OnBackStackChangedListener() {
-                    @Override public void onBackStackChanged() {
-                        int count = getSupportFragmentManager().getBackStackEntryCount();
-                        ActionBar actionbar = getSupportActionBar();
-                        if (actionbar != null) {
-                            actionbar.setDisplayHomeAsUpEnabled(count > 0);
-                            actionbar.setDisplayShowHomeEnabled(count > 0);
-                        }
-                    }
-                });
+    private void initilizeView() {
+        btMain = (Button) findViewById(R.id.btMain);
+        progressBar = (ProgressBar) findViewById(R.id.pbMain);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void initilizeGetAPI() {
+        new GETSeverAsync(this, Constant.BASE_URL + Constant.ACCESS_TOKEN, Constant.BASE_URL_REQUEST_CODE, this).execute();
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);/*
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-*/
-//        findViewById(R.id.ivRefreash).setOnClickListener(this);
+        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+        findViewById(R.id.ivRefreash).setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-          /*  case R.id.ivRefreash:
-                break;*/
+            case R.id.ivRefreash:
+                String result = Prefs.getStringValueFromPreferences(getApplicationContext(), Constant.APP_PREFERENCE);
+                result = "";
+                initilizeGetAPI();
+                progressBar.setVisibility(View.VISIBLE);
+                break;
         }
     }
 
-    public static class SampleListFragment extends Fragment {
 
-        @Nullable @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                                 @Nullable Bundle savedInstanceState) {
-            return new RecyclerView(getContext());
-        }
-
-        @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-            SampleListAdapter adapter = new SampleListAdapter();
-
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(adapter);
-
-            adapter.add(new SampleInfo("CustomViewPager", CustomViewPagerFragment.class.getName()));
-
-        }
-
-        private class SampleListAdapter extends RecyclerView.Adapter<ItemViewHolder> {
-
-            private final List<SampleInfo> mList = new ArrayList<>();
-
-            @Override public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return ItemViewHolder.create(parent);
-            }
-
-            @Override public void onBindViewHolder(final ItemViewHolder holder, int position) {
-                SampleInfo sample = mList.get(position);
-                holder.bindView(sample.title);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View v) {
-                        navigateToFragment(mList.get(holder.getAdapterPosition()).fragmentName);
-                    }
-                });
-            }
-
-            @Override public int getItemCount() {
-                return mList.size();
-            }
-
-            public boolean add(SampleInfo object) {
-                int lastIndex = mList.size();
-                if (mList.add(object)) {
-                    notifyItemInserted(lastIndex);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-
-        private void navigateToFragment(String fragmentName) {
-            Fragment fragment = Fragment.instantiate(getContext(), fragmentName);
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
-                    android.R.anim.fade_in, android.R.anim.fade_out);
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.addToBackStack(fragmentName);
-            fragmentTransaction.commit();
-        }
-
-        private static class ItemViewHolder extends RecyclerView.ViewHolder {
-            public ItemViewHolder(View itemView) {
-                super(itemView);
-            }
-
-            public void bindView(String title) {
-                ((TextView) itemView).setText(title);
-            }
-
-            public static ItemViewHolder create(ViewGroup viewGroup) {
-                return new ItemViewHolder(LayoutInflater.from(viewGroup.getContext())
-                        .inflate(R.layout.item_view, viewGroup, false));
-            }
-        }
-
-        private static class SampleInfo {
-            public String title;
-            public String fragmentName;
-
-            public SampleInfo(String title, String fragmentName) {
-                this.title = title;
-                this.fragmentName = fragmentName;
-            }
-        }
+    private void navigateToFragment(String fragmentName, String result) {
+        String key = "SURVAY_DATA";
+        CustomViewPagerFragment customViewPagerFragment = new CustomViewPagerFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString(key, result);
+        customViewPagerFragment.setArguments(bundle);
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
+                android.R.anim.fade_in, android.R.anim.fade_out);
+        fragmentTransaction.replace(R.id.fragment_container, customViewPagerFragment);
+        fragmentTransaction.addToBackStack(fragmentName);
+        fragmentTransaction.commit();
     }
+
+    @Override
+    public void onGETFinish(String result, int requestCode, boolean isSuccess) {
+        Log.e("result", result);
+
+        if(Constant.BASE_URL_REQUEST_CODE == requestCode){
+            try {
+                progressBar.setVisibility(View.GONE);
+                navigateToFragment("CustomViewPagerFragment", result);
+                Prefs.setStringValueToPreferences(getApplicationContext(), Constant.APP_PREFERENCE, result);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+        }
+
+    }
+
 }
 

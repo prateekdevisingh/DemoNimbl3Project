@@ -11,7 +11,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
+import com.example.prateek.demonimbl3project.MainActivity;
 import com.example.prateek.demonimbl3project.R;
 
 import org.json.JSONArray;
@@ -27,39 +30,40 @@ import models.SurvayModel;
 import utility.Constant;
 
 
-public class CustomViewPagerFragment extends Fragment implements GETSeverAsync.OnFinishGETAsync {
+public class CustomViewPagerFragment extends Fragment {
     private ArrayList<SurvayModel> modelArrayList = new ArrayList<>();
     CustomViewPager customViewPager;
     CircularIndicator circularIndicator;
+    ProgressBar progressBar;
+    String result;
+
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        try {
+            if(getArguments().getString("SURVAY_DATA") != null){
+                result = getArguments().getString("SURVAY_DATA");
 
-        initilizeGetAPI();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return inflater.inflate(R.layout.fragment_custom_pagerview, container, false);
     }
 
-    private void initilizeGetAPI() {
-        new GETSeverAsync(getContext(), Constant.BASE_URL + Constant.ACCESS_TOKEN, Constant.BASE_URL_REQUEST_CODE, this).execute();
-
-    }
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         customViewPager = (CustomViewPager) view.findViewById(R.id.viewpager);
         circularIndicator = (CircularIndicator) view.findViewById(R.id.indicator);
-
-
+        resultParsing(result);
 
     }
 
-    @Override
-    public void onGETFinish(String result, int requestCode, boolean isSuccess) {
-        Log.e("result", result);
+    public void resultParsing(String result) {
 
-        if(Constant.BASE_URL_REQUEST_CODE == requestCode){
             try {
                 JSONArray jsonArray = new JSONArray(result);
-
 
             for (int index = 0 ; index < jsonArray.length() ; index++){
                 try{
@@ -79,9 +83,6 @@ public class CustomViewPagerFragment extends Fragment implements GETSeverAsync.O
             }catch (Exception e){
                e.printStackTrace();
             }
-
-
-        }
 
     }
 
@@ -116,4 +117,5 @@ public class CustomViewPagerFragment extends Fragment implements GETSeverAsync.O
             e.printStackTrace();
         }
     }
+
 }

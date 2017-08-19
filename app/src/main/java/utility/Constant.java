@@ -12,6 +12,8 @@ public class Constant {
 
     public static final int LRU_CACHE_SIZE_IN_BYTES;
 
+    public static final String APP_PREFERENCE = "data_preference";
+
     static {
         final long thirdOfMemory = Runtime.getRuntime().maxMemory() / 3L;
         if (DEFAULT_CACHE_SIZE > thirdOfMemory) {

@@ -45,7 +45,7 @@ public class MainPagerAdapter extends PagerAdapter {
     Context context;
 
     public MainPagerAdapter() {
-        mSize = 4;
+        mSize = 5;
     }
 
     public MainPagerAdapter(int count) {
